@@ -2,15 +2,10 @@
 # (https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml)
 ---
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: explorer
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus-k8s
-  namespace: explorer
+  namespace: kubearmor
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -18,7 +13,7 @@ metadata:
   labels:
     app: grafana
   name: grafana-config
-  namespace: explorer
+  namespace: kubearmor
 data:
   config.yaml: |
     apiVersion: 1
@@ -343,7 +338,7 @@ metadata:
   labels:
     app: grafana
   name: grafana-kubearmor-dashboard 
-  namespace: explorer 
+  namespace: kubearmor
 data:
   kubearmor-dashboard.json: |
     {
@@ -1234,7 +1229,7 @@ data:
 kind: ConfigMap
 metadata:
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 apiVersion: v1
 data:
   prometheus.yaml: |
@@ -1386,7 +1381,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus-k8s
-  namespace: explorer
+  namespace: kubearmor
 ---
 apiVersion: v1
 kind: Service
@@ -1394,7 +1389,7 @@ metadata:
   labels:
     app: grafana
   name: grafana
-  namespace: explorer
+  namespace: kubearmor
 spec:
   ports:
     - port: 3000
@@ -1410,7 +1405,7 @@ metadata:
   labels:
     app: prometheus
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 spec:
   ports:
   - name: webui
@@ -1428,7 +1423,7 @@ metadata:
     app: grafana
     component: core
   name: grafana
-  namespace: explorer
+  namespace: kubearmor
 spec:
   replicas: 1
   selector:
@@ -1486,7 +1481,7 @@ metadata:
   labels:
     app: prometheus
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 spec:
   replicas: 1
   selector:
