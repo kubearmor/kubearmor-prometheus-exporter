@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	pb "github.com/accuknox/KubeArmor/protobuf"
+	pb "github.com/kubearmor/KubeArmor/protobuf"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
