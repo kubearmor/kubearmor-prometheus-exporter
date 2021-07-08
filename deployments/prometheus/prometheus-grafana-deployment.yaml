@@ -1,4 +1,5 @@
-# This yaml is inspired from Cilium's example deployment of Prometheus and Grafana (https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml)
+# This yaml is inspired from Cilium's example deployment of Prometheus and Grafana
+# (https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml)
 ---
 apiVersion: v1
 kind: Namespace

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kubearmor-prometheus-client
-  namespace: kube-system
+  name: kubearmor-prometheus-exporter
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kubearmor-prometheus-client
+      kubearmor-app: kubearmor-prometheus-exporter
   template:
     metadata:
       labels:
-        app: kubearmor-prometheus-client
+        kubearmor-app: kubearmor-prometheus-exporter
       annotations:
+        kubearmor-policy: audited
         prometheus.io/scrape: "true"
         prometheus.io/port: "9100"
     spec:
       containers:
-      - name: kubearmor-prometheus-client
-        image: accuknox/prometheus_exporter_test:6
+      - name: kubearmor-prometheus-exporter
+        image: kubearmor/kubearmor-prometheus-exporter:latest
         env:
         - name: KUBEARMOR_SERVICE
           value: kubearmor.kube-system.svc:32767
