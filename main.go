@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
+	"os"
 	"io"
 	"log"
 	"net/http"
@@ -84,14 +86,8 @@ func init() {
 }
 
 
-func GetPrometheusAlerts(wg *sync.WaitGroup) {
-	// TODO need to use ENV instead of hardcoded values
-	url := "kubearmor.kube-system.svc.cluster.local"
-	port := "32767"
-
-	address := url + ":" + port
-
-	connection, err := grpc.Dial(address, grpc.WithInsecure())
+func GetPrometheusAlerts(wg *sync.WaitGroup, gRPCAddr string) {
+	connection, err := grpc.Dial(gRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -143,8 +139,29 @@ func GetPrometheusAlerts(wg *sync.WaitGroup) {
 func main() {
 	var wg sync.WaitGroup
 
+	// == //
+	
+	gRPCPtr := flag.String("gRPC", "", "gRPC server information")
+	flag.Parse()
+	
+	// == //
+	
+	gRPCAddr := ""
+	
+	if *gRPCPtr != "" {
+		gRPCAddr = *gRPCPtr
+	} else {
+		if val, ok := os.LookupEnv("KUBEARMOR_SERVICE"); ok {
+			gRPCAddr = val
+		} else {
+			gRPCAddr = "localhost:32767"
+		}
+	}
+	
+	// == //
+	
 	wg.Add(1)
-	go GetPrometheusAlerts(&wg)
+	go GetPrometheusAlerts(&wg, gRPCAddr)
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":9100", nil))
