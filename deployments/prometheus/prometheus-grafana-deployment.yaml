@@ -2,23 +2,18 @@
 # (https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml)
 ---
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: explorer
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: prometheus-k8s
-  namespace: explorer
+  name: kubearmor-prometheus
+  namespace: kubearmor
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: grafana
-  name: grafana-config
-  namespace: explorer
+    kubearmor-app: grafana
+  name: kubearmor-grafana-dashboard
+  namespace: kubearmor
 data:
   config.yaml: |
     apiVersion: 1
@@ -341,9 +336,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: grafana
-  name: grafana-kubearmor-dashboard 
-  namespace: explorer 
+    kubearmor-app: grafana
+  name: kubearmor-grafana-dashboard 
+  namespace: kubearmor
 data:
   kubearmor-dashboard.json: |
     {
@@ -1233,8 +1228,10 @@ data:
 ---
 kind: ConfigMap
 metadata:
+  labels:
+    kubearmor-app: prometheus
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 apiVersion: v1
 data:
   prometheus.yaml: |
@@ -1385,32 +1382,32 @@ roleRef:
   name: prometheus
 subjects:
 - kind: ServiceAccount
-  name: prometheus-k8s
-  namespace: explorer
+  name: kubearmor-prometheus
+  namespace: kubearmor
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: grafana
+    kubearmor-app: grafana
   name: grafana
-  namespace: explorer
+  namespace: kubearmor
 spec:
   ports:
     - port: 3000
       protocol: TCP
       targetPort: 3000
   selector:
-    app: grafana
+    kubearmor-app: grafana
   type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: prometheus
+    kubearmor-app: prometheus
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 spec:
   ports:
   - name: webui
@@ -1418,26 +1415,26 @@ spec:
     protocol: TCP
     targetPort: 9090
   selector:
-    app: prometheus
+    kubearmor-app: prometheus
   type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: grafana
+    kubearmor-app: grafana
     component: core
   name: grafana
-  namespace: explorer
+  namespace: kubearmor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      kubearmor-app: grafana
   template:
     metadata:
       labels:
-        app: grafana
+        kubearmor-app: grafana
     spec:
       containers:
         - env:
@@ -1477,25 +1474,25 @@ spec:
           name: grafana-config
         - configMap:
             defaultMode: 420
-            name: grafana-kubearmor-dashboard
+            name: kubearmor-grafana-dashboard
           name: kubearmor-dashboard
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: prometheus
+    kubearmor-app: prometheus
   name: prometheus
-  namespace: explorer
+  namespace: kubearmor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      kubearmor-app: prometheus
   template:
     metadata:
       labels:
-        app: prometheus
+        kubearmor-app: prometheus
       name: prometheus-main
     spec:
       containers:
@@ -1518,7 +1515,7 @@ spec:
           name: storage
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      serviceAccount: prometheus-k8s
+      serviceAccount: kubearmor-prometheus
       volumes:
       - configMap:
           name: prometheus
