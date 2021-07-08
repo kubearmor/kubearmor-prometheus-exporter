@@ -20,7 +20,7 @@ $ cd kubearmor-prometheus-exporter/deployments/prometheus
 .../deployments/prometheus$ kubectl apply -n [target namespace] -f prometheus-grafana-deployment.yaml
 ```
 
-The prometheus-grafana-deployment.yaml is highly inspired from the Cilium's example deployment of Prometheus and Grafana [cilium/.../examples/kubernetes/.../prometheus/monitoring-example.yaml](https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml).
+The prometheus-grafana-deployment.yaml is highly inspired from the Cilium's example deployment of Prometheus and Grafana ([https://.../cilium/cilium/.../examples/kubernetes/.../prometheus/monitoring-example.yaml](https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml)).
 
 * **Grafana:** A visualization dashboard with Cilium Dashboard pre-loaded.  
 * **Prometheus:** a time series database and monitoring system.  
@@ -53,6 +53,7 @@ For Grafana
 vagrant ssh -- -L 3000:127.0.0.1:3000    
 ```
 To view the Grafana Dashboard, head over to [localhost:3000](127.0.0.1:3000). You should be able to view the KubeArmor Dashboard.  
+
 ---
 
 ## Metrics
