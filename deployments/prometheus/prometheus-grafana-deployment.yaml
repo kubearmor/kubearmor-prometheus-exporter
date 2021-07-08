@@ -12,7 +12,7 @@ kind: ConfigMap
 metadata:
   labels:
     kubearmor-app: grafana
-  name: kubearmor-grafana-dashboard
+  name: grafana-config
   namespace: kubearmor
 data:
   config.yaml: |
