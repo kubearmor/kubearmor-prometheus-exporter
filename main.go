@@ -140,14 +140,14 @@ func main() {
 	var wg sync.WaitGroup
 
 	// == //
-	
+
 	gRPCPtr := flag.String("gRPC", "", "gRPC server information")
 	flag.Parse()
-	
+
 	// == //
-	
+
 	gRPCAddr := ""
-	
+
 	if *gRPCPtr != "" {
 		gRPCAddr = *gRPCPtr
 	} else {
@@ -157,9 +157,9 @@ func main() {
 			gRPCAddr = "localhost:32767"
 		}
 	}
-	
+
 	// == //
-	
+
 	wg.Add(1)
 	go GetPrometheusAlerts(&wg, gRPCAddr)
 
