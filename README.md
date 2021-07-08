@@ -30,14 +30,14 @@ The prometheus-grafana-deployment.yaml is highly inspired from the Cilium's exam
 
 Expose the port on your local machine
 ```
-kubectl -n explorer port-forward service/prometheus --address 0.0.0.0 --address :: 9091:9090
+kubectl -n kubearmor port-forward service/prometheus --address 0.0.0.0 --address :: 9091:9090
 ```
 
 ### Grafana Access
 
 Expose the port on your local machine
 ```
-kubectl -n explorer port-forward service/grafana --address 0.0.0.0 --address :: 3000:3000
+kubectl -n kubearmor port-forward service/grafana --address 0.0.0.0 --address :: 3000:3000
 ```
 
 ---
