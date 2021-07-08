@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
+	"os"
 	"io"
 	"log"
 	"net/http"
@@ -17,67 +19,65 @@ import (
 var (
 totalAlertsRequestsinHost = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_in_host_total",
-		Help: "Total number of logs generated from Kubearmor Relay based on HostName",
+		Name: "kubearmor_alerts_in_host_total",
+		Help: "Total number of alerts based on HostName",
 	}, []string{"HostName"})
-
-
-totalAlertsRequestsinPod = prometheus.NewCounterVec(
-	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_in_pod_total",
-		Help: "Total number of logs generated from Kubearmor Relay based on PodName",
-	}, []string{"PodName"})
-
 
 totalAlertsRequestsinNamespace = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_in_namespace_total",
-		Help: "Total number of logs generated from Kubearmor Relay based on Namespace",
+		Name: "kubearmor_alerts_in_namespace_total",
+		Help: "Total number of alerts based on Namespace",
 	}, []string{"NamespaceName"})
 
+totalAlertsRequestsinPod = prometheus.NewCounterVec(
+	prometheus.CounterOpts{
+		Name: "kubearmor_alerts_in_pod_total",
+		Help: "Total number of alerts based on PodName",
+	}, []string{"PodName"})
 
 totalAlertsRequestsinContainer = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_in_container_total",
-		Help: "Total number of logs generated from Kubearmor Relay based on Container",
+		Name: "kubearmor_alerts_in_container_total",
+		Help: "Total number of alerts based on Container",
 	}, []string{"ContainerName"})
 
 totalAlertsWithPolicy = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_policy_logs_total",
-		Help: "Total number of logs generated on a given policy",
+		Name: "kubearmor_alerts_with_policy_total",
+		Help: "Total number of alerts based on Policy",
 	}, []string{"PolicyName"})
 
 totalAlertsWithSeverity = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_with_severity_total",
-		Help: "Total number of logs generated with X severity or above",
+		Name: "kubearmor_alerts_with_severity_total",
+		Help: "Total number of alerts with X severity or above",
 	}, []string{"Severity"})
 
 totalAlertsWithType = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_with_type_total",
-		Help: "Total number of logs generated from Kubearmor Relay based on given type",
+		Name: "kubearmor_alerts_with_type_total",
+		Help: "Total number of alerts based on Type",
 	}, []string{"Type"})
 
 totalAlertsWithOperation = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_with_operation_total",
-		Help: "Total number of logs generated with a given Operation",
+		Name: "kubearmor_alerts_with_operation_total",
+		Help: "Total number of alerts based on Operation",
 	}, []string{"Operation"})
 
 totalAlertsWithAction = prometheus.NewCounterVec(
 	prometheus.CounterOpts{
-		Name: "kubearmor_relay_logs_with_action_total",
-		Help: "Total number of logs generated with a given action",
+		Name: "kubearmor_alerts_with_action_total",
+		Help: "Total number of alerts based on Action",
 	}, []string{"Action"})
 )
 
 func init() {
 	prometheus.MustRegister(totalAlertsRequestsinHost)
-	prometheus.MustRegister(totalAlertsRequestsinPod)
 	prometheus.MustRegister(totalAlertsRequestsinNamespace)
+	prometheus.MustRegister(totalAlertsRequestsinPod)
 	prometheus.MustRegister(totalAlertsRequestsinContainer)
+
 	prometheus.MustRegister(totalAlertsWithPolicy)
 	prometheus.MustRegister(totalAlertsWithSeverity)
 	prometheus.MustRegister(totalAlertsWithType)
@@ -86,16 +86,11 @@ func init() {
 }
 
 
-func GetPrometheusAlerts(wg *sync.WaitGroup) {
-	url := "kubearmor.kube-system.svc.cluster.local"
-	port := "32767"
-	address := url + ":" + port
-
-	connection, err := grpc.Dial(address, grpc.WithInsecure())
+func GetPrometheusAlerts(wg *sync.WaitGroup, gRPCAddr string) {
+	connection, err := grpc.Dial(gRPCAddr, grpc.WithInsecure())
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	client := pb.NewLogServiceClient(connection)
 
 	req := &pb.RequestMessage{
@@ -119,31 +114,57 @@ func GetPrometheusAlerts(wg *sync.WaitGroup) {
 			fmt.Println(err.Error())
 			break
 		case nil:
+			//
 		default:
 			fmt.Println(err.Error())
 		}
 
-		fmt.Println(alertIn)
+		// fmt.Println(alertIn)
+
 		totalAlertsRequestsinHost.WithLabelValues(alertIn.HostName).Add(1)
-		totalAlertsRequestsinPod.WithLabelValues(alertIn.PodName).Add(1)
 		totalAlertsRequestsinNamespace.WithLabelValues(alertIn.NamespaceName).Add(1)
+		totalAlertsRequestsinPod.WithLabelValues(alertIn.PodName).Add(1)
 		totalAlertsRequestsinContainer.WithLabelValues(alertIn.ContainerName).Add(1)
+
 		totalAlertsWithPolicy.WithLabelValues(alertIn.PolicyName).Add(1)
 		totalAlertsWithSeverity.WithLabelValues(alertIn.Severity).Add(1)
 		totalAlertsWithType.WithLabelValues(alertIn.Type).Add(1)
 		totalAlertsWithOperation.WithLabelValues(alertIn.Operation).Add(1)
 		totalAlertsWithAction.WithLabelValues(alertIn.Action).Add(1)
 	}
+
 	wg.Done()
 }
 
 func main() {
 	var wg sync.WaitGroup
 
+	// == //
+
+	gRPCPtr := flag.String("gRPC", "", "gRPC server information")
+	flag.Parse()
+
+	// == //
+
+	gRPCAddr := ""
+
+	if *gRPCPtr != "" {
+		gRPCAddr = *gRPCPtr
+	} else {
+		if val, ok := os.LookupEnv("KUBEARMOR_SERVICE"); ok {
+			gRPCAddr = val
+		} else {
+			gRPCAddr = "localhost:32767"
+		}
+	}
+
+	// == //
+
 	wg.Add(1)
-	go GetPrometheusAlerts(&wg)
+	go GetPrometheusAlerts(&wg, gRPCAddr)
 
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":9100", nil))
+
 	wg.Wait()
 }

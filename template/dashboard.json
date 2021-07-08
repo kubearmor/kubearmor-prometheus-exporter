@@ -65,7 +65,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_in_host_total) by (HostName)",
+          "expr": "max(kubearmor_alerts_in_host_total) by (HostName)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -75,7 +75,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs on given Host",
+      "title": "Number of alerts on a given Host",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -159,7 +159,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_in_pod_total) by (PodName)",
+          "expr": "max(kubearmor_alerts_in_namespace_total) by (NamespaceName)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -169,7 +169,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs on given Pod",
+      "title": "Number of alerts on a given Namespace",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -253,7 +253,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_in_namespace_total) by (NamespaceName)",
+          "expr": "max(kubearmor_alerts_in_pod_total) by (PodName)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -263,7 +263,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs in given Namespace",
+      "title": "Number of alerts in a given Pod",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -347,7 +347,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_in_container_total) by (ContainerName)",
+          "expr": "max(kubearmor_alerts_in_container_total) by (ContainerName)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -357,7 +357,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs on given Container ",
+      "title": "Number of alerts on a given Container ",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -441,7 +441,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_policy_logs_total) by (PolicyName)",
+          "expr": "max(kubearmor_alerts_with_policy_total) by (PolicyName)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -451,7 +451,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs with given Policy",
+      "title": "Number of alerts with a given Policy",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -535,7 +535,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_with_severity_total) by (Severity)",
+          "expr": "max(kubearmor_alerts_with_severity_total) by (Severity)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -545,7 +545,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs with given Severity",
+      "title": "Number of alerts with a given Severity",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -629,7 +629,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_with_type_total) by (Type)",
+          "expr": "max(kubearmor_alerts_with_type_total) by (Type)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -639,7 +639,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs with given Type",
+      "title": "Number of alerts with a given Type",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -723,7 +723,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_with_operation_total) by (Operation)",
+          "expr": "max(kubearmor_alerts_with_operation_total) by (Operation)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -733,7 +733,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs with given Operation",
+      "title": "Number of alerts with a given Operation",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -817,7 +817,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "max(kubearmor_relay_logs_with_action_total) by (Action)",
+          "expr": "max(kubearmor_alerts_with_action_total) by (Action)",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -827,7 +827,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Number of logs with given Action",
+      "title": "Number of alerts with a given Action",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -878,7 +878,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Kubearmor Dashboard",
+  "title": "KubeArmor Dashboard",
   "uid": "wJFuG-knk",
   "version": 1
 }
