@@ -79,8 +79,8 @@ It exposes the following KubeArmor metrics to Prometheus:
 
 ## Grafana Dashboard
 
-![Logs on Host](images/1.png)
-![Logs on Host](images/2.png)
-![Logs on Host](images/3.png)
+![Logs on Host](res/dashboard_1.png)
+![Logs on Host](res/dashboard_2.png)
+![Logs on Host](res/dashboard_3.png)
 
 
