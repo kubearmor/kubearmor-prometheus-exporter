@@ -1,0 +1,105 @@
+syntax = "proto3";
+ 
+package feeder;
+
+option go_package="github.com/accuknox/KubeArmor/protobuf";
+
+// Health check
+message NonceMessage {
+  int32 nonce = 1;
+}
+
+// message struct
+message Message {
+  int64 Timestamp = 1;
+  string UpdatedTime = 2;
+
+  string ClusterName = 3;
+  string HostName = 4;
+  string HostIP = 5;
+
+  string Type = 6;
+
+  string Level = 7;
+  string Message = 8;
+}
+
+// alert struct
+message Alert {
+  int64 Timestamp = 1;
+  string UpdatedTime = 2;
+
+  string ClusterName = 3;
+  string HostName = 4;
+
+  string NamespaceName = 5;
+  string PodName = 6;
+
+  string ContainerID = 7;
+  string ContainerName = 8;
+
+  int32 HostPID = 9;
+  int32 PPID = 10;
+  int32 PID = 11;
+  int32 UID = 12;
+
+  string PolicyName = 13;
+  string Severity = 14;
+
+  string Tags = 15;
+  string Message = 16;
+
+  string Type = 17;
+  string Source = 18;
+  string Operation = 19;
+  string Resource = 20;
+  string Data = 21;
+
+  string Action = 22;
+  string Result = 23;
+}
+
+// log struct
+message Log {
+  int64 Timestamp = 1;
+  string UpdatedTime = 2;
+
+  string ClusterName = 3;
+  string HostName = 4;
+
+  string NamespaceName = 5;
+  string PodName = 6;
+
+  string ContainerID = 7;
+  string ContainerName = 8;
+
+  int32 HostPID = 9;
+  int32 PPID = 10;
+  int32 PID = 11;
+  int32 UID = 12;
+
+  string Type = 13;
+  string Source = 14;
+  string Operation = 15;
+  string Resource = 16;
+  string Data = 17;
+
+  string Result = 18;
+}
+
+// request message
+message RequestMessage {
+  string Filter = 1;
+}
+
+// reply message
+message ReplyMessage {
+  int32 Retval = 1;
+}
+
+service LogService {
+  rpc HealthCheck(NonceMessage) returns (ReplyMessage);
+  rpc WatchMessages(RequestMessage) returns (stream Message);
+  rpc WatchAlerts(RequestMessage) returns (stream Alert);
+  rpc WatchLogs(RequestMessage) returns (stream Log);
+}
