@@ -17,10 +17,10 @@ If you do not have a Prometheus setup, you can quickly set up the Prometheus wit
 
 ```
 $ cd kubearmor-prometheus-exporter/deployments/prometheus
-~/kubearmor-prometheus-exporter/deployments/prometheus$ kubectl apply -n [target namespace] -f prometheus-grafana-deployment.yaml
+.../deployments/prometheus$ kubectl apply -n [target namespace] -f prometheus-grafana-deployment.yaml
 ```
 
-The prometheus-grafana-deployment.yaml is highly inspired from the Cilium's example deployment of Prometheus and Grafana [https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml](https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml).
+The prometheus-grafana-deployment.yaml is highly inspired from the Cilium's example deployment of Prometheus and Grafana [cilium/.../examples/kubernetes/.../prometheus/monitoring-example.yaml](https://raw.githubusercontent.com/cilium/cilium/1.10.2/examples/kubernetes/addons/prometheus/monitoring-example.yaml).
 
 * **Grafana:** A visualization dashboard with Cilium Dashboard pre-loaded.  
 * **Prometheus:** a time series database and monitoring system.  
@@ -40,34 +40,34 @@ kubectl -n explorer port-forward service/grafana --address 0.0.0.0 --address :: 
 ```
 
 ---
-**Note:** In a vagrant environment, you will need to configure port-forwarding to access the Prometheus and Grafana services.
+**Note:** In vagrant, you will need to configure port-forwarding to access the Prometheus and Grafana services.
 
 For Prometheus
 ```
 vagrant ssh -- -L 9090:127.0.0.1:9091
 ```
+You should be able to see the following metrics on Prometheus UI at [localhost:9090](127.0.0.1:9090).  
+
 For Grafana
 ```
 vagrant ssh -- -L 3000:127.0.0.1:3000    
 ```
----
-
-You should be able to see the following metrics on Prometheus UI at [localhost:9090](127.0.0.1:9090).  
 To view the Grafana Dashboard, head over to [localhost:3000](127.0.0.1:3000). You should be able to view the KubeArmor Dashboard.  
+---
 
 ## Metrics
 
-|             About Metrics            |     Label     |              Metric Name             |
-| ------------------------------------ | :-----------: | -----------------------------------: |
-| Number of alerts per Host            |HostName       |kubearmor_alerts_in_host_total        |
-| Number of alerts per Namespace       |NamespaceName  |kubearmor_alerts_in_namespace_total   |
-| Number of alerts per Pod             |PodName        |kubearmor_alerts_in_pod_total         |
-| Number of alerts per Container       |ContainerName  |kubearmor_alerts_in_container_total   |
-| Number of alerts per Policy          |PolicyName     |kubearmor_alerts_with_policy_total    |
-| Number of alerts per severity        |Severity       |kubearmor_alerts_with_severity_total  |
-| Number of alerts per type            |Type           |kubearmor_alerts_with_type_total      |
-| Number of alerts per operation       |Operation      |kubearmor_alerts_with_operation_total |
-| Number of alerts per action          |Action         |kubearmor_alerts_with_action_total    |
+|                                   About Metrics                                   |     Label     |              Metric Name             |
+| --------------------------------------------------------------------------------- | :-----------: | ------------------------------------ |
+| Number of alerts per Host                                                         |HostName       |kubearmor_alerts_in_host_total        |
+| Number of alerts per Namespace                                                    |NamespaceName  |kubearmor_alerts_in_namespace_total   |
+| Number of alerts per Pod                                                          |PodName        |kubearmor_alerts_in_pod_total         |
+| Number of alerts per Container                                                    |ContainerName  |kubearmor_alerts_in_container_total   |
+| Number of alerts per Policy                                                       |PolicyName     |kubearmor_alerts_with_policy_total    |
+| Number of alerts per severity                                                     |Severity       |kubearmor_alerts_with_severity_total  |
+| Number of alerts per type (MatchedPolicy, MatchedHostPolicy, MatchedNativePolicy) |Type           |kubearmor_alerts_with_type_total      |
+| Number of alerts per operation (Process, File, Network, Capabilities)             |Operation      |kubearmor_alerts_with_operation_total |
+| Number of alerts per action (Allow, Audit, Block)                                 |Action         |kubearmor_alerts_with_action_total    |
 
 ## Grafana Dashboard
 
